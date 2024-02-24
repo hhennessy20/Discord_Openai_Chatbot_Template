@@ -34,7 +34,7 @@ def run_bot(name, context_message, openai_key, discord_key):
     # Event that runs whenever a message is sent in a channel the bot can see
     @discord_client.event
     async def on_message(message):
-        # Check if the message contains "David"
+        # Check if the message contains name
         if name.upper() in message.content.upper() and message.author != discord_client.user:
             username = message.author.name
             if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and username is not None:
