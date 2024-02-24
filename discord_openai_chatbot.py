@@ -60,7 +60,7 @@ def run_bot(names, context_message, openai_key, discord_key):
             else:
                 message_is_bot.append([False, False])
 
-            if too_many_bots(message_is_bot):
+            if message.author.bot and too_many_bots(message_is_bot):
                 return
             
             #Gets name or nickname of user to append to bot message
