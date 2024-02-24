@@ -1,6 +1,8 @@
 # Author: hhennessy20 and Shnabbydoodle
 # 2/14/2024
 # Copyright MMXXIV :)
+# please dont steal!!!
+# no copyright infringement intended!!!
 
 import discord
 import os
