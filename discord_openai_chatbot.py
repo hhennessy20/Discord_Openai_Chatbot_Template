@@ -15,7 +15,7 @@ def name_in_message(names, message):
 def too_many_bots(message_is_bot, discord_client):
     counter = 0
     for message in message_is_bot[-10:]:
-        if message[0] and message[1]:
+        if message[0] and not message[1]:
             counter += 1
     if counter >= 10:
         return True
