@@ -17,7 +17,7 @@ def too_many_bots(message_is_bot):
     for message in message_is_bot[-4:]:
         if message[0] and not message[1]:
             counter += 1
-    if counter >= 2:
+    if counter > 2:
         return True
     return False
 
