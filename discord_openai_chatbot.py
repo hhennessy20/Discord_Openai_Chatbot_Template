@@ -12,7 +12,7 @@ def name_in_message(names, message):
             name_in_message = True
     return name_in_message
 
-def too_many_bots(message_is_bot, discord_client):
+def too_many_bots(message_is_bot):
     counter = 0
     for message in message_is_bot[-4:]:
         if message[0] and not message[1]:
@@ -60,7 +60,7 @@ def run_bot(names, context_message, openai_key, discord_key):
             else:
                 message_is_bot.append([False, False])
 
-            if not too_many_bots(message_is_bot, discord_client):
+            if not too_many_bots(message_is_bot):
                 #Gets name or nickname of user to append to bot message
                 username = message.author.name
                 if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and message.author.nick is not None:
