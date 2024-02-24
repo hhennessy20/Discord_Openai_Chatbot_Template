@@ -62,7 +62,7 @@ def run_bot(names, context_message, openai_key, discord_key):
         
             #Gets name or nickname of user to append to bot message
             username = message.author.name
-            if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and username is not None:
+            if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and message.author.nick is not None:
                 username = message.author.nick
 
             #Simulates a few seconds of bot reading your message
