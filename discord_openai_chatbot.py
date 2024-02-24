@@ -50,7 +50,7 @@ def run_bot(names, context_message, openai_key, discord_key):
     @discord_client.event
     async def on_message(message):
         # Checks if the message contains name
-        if (name_in_message(names, message.content) and message.author != discord_client.user) and not too_many_bots(message_is_bot, discord_client):
+        if (name_in_message(names, message.content) and message.author != discord_client.user):
 
             # Checks if message is bot
             if message.author.bot and message.author == discord_client.user:
@@ -59,7 +59,10 @@ def run_bot(names, context_message, openai_key, discord_key):
                 message_is_bot.append([True, False])
             else:
                 message_is_bot.append([False, False])
-        
+
+            if too_many_bots(message_is_bot, discord_client):
+                return
+            
             #Gets name or nickname of user to append to bot message
             username = message.author.name
             if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and message.author.nick is not None:
