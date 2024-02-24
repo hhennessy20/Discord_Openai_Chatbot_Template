@@ -4,23 +4,28 @@ from openai import OpenAI
 import asyncio
 import random
 
-# [name.upper() for name in names]
+#Returns true if any name is in message
+def name_in_message(names, message):
+    name_in_message = False
+    for name in names:
+        if name.upper() in message.upper():
+            name_in_message = True
+    return name_in_message
 
-
-def run_bot(name, context_message, openai_key, discord_key):
+# Main command for running bot
+def run_bot(names, context_message, openai_key, discord_key):
     openai_client = OpenAI(
-        # This is the default and can be omitted
         api_key= openai_key
     )
 
-    # Create the array of messages the bot will receive and initialize its personality
+    # Creates the array of messages the bot will receive and initialize its personality
     messages = []
     messages.append({"role": "system", "content": context_message})
-    # Define the intents your bot will use
+    # Defines the intents your bot will use
     intents = discord.Intents.default()
     intents.message_content = True
 
-    # Create a new Discord client with the specified intents
+    # Creates a new Discord client with the specified intents
     discord_client = discord.Client(intents=intents)
 
     # Event that runs when the bot is ready
@@ -34,24 +39,37 @@ def run_bot(name, context_message, openai_key, discord_key):
     # Event that runs whenever a message is sent in a channel the bot can see
     @discord_client.event
     async def on_message(message):
-        # Check if the message contains name
-        if name.upper() in message.content.upper() and message.author != discord_client.user:
+        # Checks if the message contains name
+        if name_in_message(names, message.content) and message.author != discord_client.user:
+            #Gets name or nickname of user to append to bot message
             username = message.author.name
             if (message.channel.type is not (discord.ChannelType.private or discord.ChannelType.group)) and username is not None:
                 username = message.author.nick
+
+            #Simulates a few seconds of bot reading your message
             await asyncio.sleep(random.randint(0,500)/100)
+
+            #Bot will appear to be typing while it generates your message
             async with message.channel.typing():
+                #Reminds the bot about itself every 10 messages
                 if len(messages) % 10 == 0:
                     messages.append({"role": "system", "content": "Please remember and adhere to the following: " + context_message})
+                
+                #Sends your message to openai and gets response
                 messages.append({"role": "user", "content": username + " says: " + message.content})
                 chgpt_response = openai_client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=messages)
-                # Respond with a generated message
                 response = chgpt_response.choices[0].message.content
+
+                # Adds response to bot context so it remembers
                 messages.append({"role": "assistant", "content": response})
+                
+                #Simulates the bot typing your message, slightly longer depending on the length of the message
                 await asyncio.sleep(.01 * len(response))
                 await message.channel.send(response)
 
+    # Runs the bot with your Discord token
+    discord_client.run(discord_key)
     # Run the bot with your Discord token
     discord_client.run(discord_key)
