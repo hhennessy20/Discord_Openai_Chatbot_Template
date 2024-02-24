@@ -13,7 +13,6 @@ def name_in_message(names, message):
     return name_in_message
 
 def too_many_bots(message_is_bot):
-def too_many_bots(message_is_bot):
     counter = 0
     for message in message_is_bot[-4:]:
         if message[0] and not message[1]:
