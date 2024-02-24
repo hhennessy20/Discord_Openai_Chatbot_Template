@@ -17,6 +17,7 @@ def too_many_bots(message_is_bot):
     for message in message_is_bot[-4:]:
         if message[0] and not message[1]:
             counter += 1
+    print(counter)
     if counter > 2:
         return True
     return False
@@ -52,6 +53,7 @@ def run_bot(names, context_message, openai_key, discord_key):
         # Checks if the message contains name
         if (name_in_message(names, message.content) and message.author != discord_client.user):
 
+            print(message.content)
             # Checks if message is bot
             if message.author.bot and message.author == discord_client.user:
                 message_is_bot.append([True, True])
