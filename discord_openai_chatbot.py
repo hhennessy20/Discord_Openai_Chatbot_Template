@@ -71,5 +71,3 @@ def run_bot(names, context_message, openai_key, discord_key):
 
     # Runs the bot with your Discord token
     discord_client.run(discord_key)
-    # Run the bot with your Discord token
-    discord_client.run(discord_key)
