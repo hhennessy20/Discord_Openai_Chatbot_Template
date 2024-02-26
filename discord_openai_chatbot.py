@@ -85,12 +85,9 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
             # Check if it's time to send a message
             if last_message_time is None or datetime.datetime.now().date() > last_message_time.date():
                 # Calculate a random time within the current day
-                # random_hour = random.randint(0, 23)
-                # random_minute = random.randint(0, 59)
-                # random_second = random.randint(0, 59)
-                random_hour = 22
-                random_minute = 58
-                random_second = 20
+                random_hour = random.randint(0, 23)
+                random_minute = random.randint(0, 59)
+                random_second = random.randint(0, 59)
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
                 # If the scheduled time is in the past, add one day to it
