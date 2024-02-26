@@ -16,4 +16,7 @@ discord_key = 'DISCORD_KEY'
 # Optional parameter with default value of 10 to set how often the bot is reminded of its context message
 repetition_interval = 10
 
+# Optional parameter with default value of empty. Example input [["My Server", "general"], ["Friend's Server", "bot-chat-channel"]].
+propose_conversation_starters_in = []
+
 discord_openai_chatbot.run_bot(names, context_message, openai_key, discord_key)
