@@ -44,6 +44,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
     # Defines the intents your bot will use
     intents = discord.Intents.default()
     intents.message_content = True
+    intents.members = True
 
     # Creates a new Discord client with the specified intents
     discord_client = discord.Client(intents=intents)
@@ -79,7 +80,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 21
-                random_minute = 47
+                random_minute = 48
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
