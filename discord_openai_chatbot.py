@@ -56,6 +56,10 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
         print(discord_client.user.id)
         print('------')
 
+        # Fetch all members to ensure the member cache is populated
+        for guild in discord_client.guilds:
+            await guild.fetch_members()
+
         if propose_conversation_starters_in:
             # Schedule the task to send a message once per day
             await send_daily_message()
@@ -74,7 +78,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 21
-                random_minute = 41
+                random_minute = 45
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
