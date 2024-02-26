@@ -80,7 +80,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 21
-                random_minute = 53
+                random_minute = 59
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
@@ -96,6 +96,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 for channel in discord_client.get_all_channels():
                     if (channel.type is not (discord.ChannelType.private or discord.ChannelType.group)):
                         print(channel.name)
+                        print (str(channel.name in propose_conversation_starters_in))
                         if channel.name in propose_conversation_starters_in:
                             # Get a random non-bot member from the server
                             member = random.choice([m for m in discord_client.get_all_members() if not m.bot])
