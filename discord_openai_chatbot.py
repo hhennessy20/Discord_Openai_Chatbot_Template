@@ -89,7 +89,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 22
-                random_minute = 24
+                random_minute = 29
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
@@ -113,7 +113,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                         # Generate a message using OpenAI
                         generated_message = openai_client.chat.completions.create(
                             model="gpt-3.5-turbo",
-                            messages=[{"role": "system", "content": "Come up with an interesting conversation starting question and propose it to " + username}]
+                            messages=[{"role": "system", "content": "Come up with an interesting and unique (not boring, something really out there) conversation starting question related to your character and propose it to " + username + ". Mention them by name! Also, frame this message as one of your daily questions!"}]
                         ).choices[0].message.content
                         # Send the message to the randomly chosen member
                         await channel.send(generated_message)
