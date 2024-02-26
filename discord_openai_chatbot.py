@@ -80,7 +80,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 21
-                random_minute = 48
+                random_minute = 50
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
