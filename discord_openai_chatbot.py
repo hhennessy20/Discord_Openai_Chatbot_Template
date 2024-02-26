@@ -11,6 +11,15 @@ import asyncio
 import random
 import datetime
 
+#Returns a channel with the specified server and channel name if exists
+async def get_channel(discord_client, server_name, channel_name):
+    for guild in discord_client.guilds:
+        if guild.name == server_name:
+            for channel in guild.channels:
+                if isinstance(channel, discord.TextChannel) and channel.name == channel_name:
+                    return channel
+    return None
+
 #Returns true if any name is in message
 def name_in_message(names, message):
     name_in_message = False
@@ -80,7 +89,7 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                 #random_minute = random.randint(0, 59)
                 #random_second = random.randint(0, 59)
                 random_hour = 22
-                random_minute = 3
+                random_minute = 24
                 random_second = 0
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
@@ -93,25 +102,23 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
 
                 # Wait until the scheduled time
                 await asyncio.sleep(time_difference.total_seconds())
-                for channel in discord_client.get_all_channels():
-                    if (channel.type is not (discord.ChannelType.private or discord.ChannelType.group)):
-                        print(channel.guild.name, ": ", channel.name)
-                        print (str(channel.name in propose_conversation_starters_in))
-                        if channel.name in propose_conversation_starters_in:
-                            # Get a random non-bot member from the server
-                            member = random.choice([m for m in discord_client.get_all_members() if not m.bot])
-                            username = member.name
-                            if member.nick is not None:
-                                username = member.nick
-                            # Generate a message using OpenAI
-                            generated_message = openai_client.chat.completions.create(
-                                model="gpt-3.5-turbo",
-                                messages=[{"role": "system", "content": "Come up with an interesting conversation starting question and propose it to " + username}]
-                            ).choices[0].message.content
-                            # Send the message to the randomly chosen member
-                            await member.send(generated_message)
-                            # Update the last message time
-                            last_message_time = datetime.datetime.now()
+                for channel_list in propose_conversation_starters_in:
+                    channel = await get_channel(discord_client, channel_list[0], channel_list[1])
+                    if channel is not None:
+                        # Get a random non-bot member from the server
+                        member = random.choice([m for m in discord_client.get_all_members() if not m.bot])
+                        username = member.name
+                        if member.nick is not None:
+                            username = member.nick
+                        # Generate a message using OpenAI
+                        generated_message = openai_client.chat.completions.create(
+                            model="gpt-3.5-turbo",
+                            messages=[{"role": "system", "content": "Come up with an interesting conversation starting question and propose it to " + username}]
+                        ).choices[0].message.content
+                        # Send the message to the randomly chosen member
+                        await channel.send(generated_message)
+                        # Update the last message time
+                        last_message_time = datetime.datetime.now()
 
             # Wait for 24 hours before checking again
             await asyncio.sleep(24 * 60 * 60)
