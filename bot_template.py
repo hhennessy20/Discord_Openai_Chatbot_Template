@@ -13,4 +13,7 @@ openai_key = 'OPENAI_KEY'
 #Enter your Discord bot's key here after setting it up here: https://discord.com/developers/applications
 discord_key = 'DISCORD_KEY'
 
+# Optional parameter with default value of 10 to set how often the bot is reminded of its context message
+repetition_interval = 10
+
 discord_openai_chatbot.run_bot(names, context_message, openai_key, discord_key)

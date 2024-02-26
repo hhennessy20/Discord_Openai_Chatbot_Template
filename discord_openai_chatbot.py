@@ -30,7 +30,7 @@ def too_many_bots(message_is_bot):
     return False
 
 # Main command for running bot
-def run_bot(names, context_message, openai_key, discord_key):
+def run_bot(names, context_message, openai_key, discord_key, repetition_interval = 10):
     openai_client = OpenAI(
         api_key= openai_key
     )
@@ -85,7 +85,7 @@ def run_bot(names, context_message, openai_key, discord_key):
             # Bot will appear to be typing while it generates your message
             async with message.channel.typing():
                 # Reminds the bot about itself every 10 messages
-                if len(messages) % 10 == 0:
+                if len(messages) % repetition_interval == 0:
                     messages.append({"role": "system", "content": "Please remember and adhere to the following: " + context_message})
                 
                 # Sends your message to openai and gets response
