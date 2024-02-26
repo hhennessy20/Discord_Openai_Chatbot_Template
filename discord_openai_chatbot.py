@@ -85,9 +85,12 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
             # Check if it's time to send a message
             if last_message_time is None or datetime.datetime.now().date() > last_message_time.date():
                 # Calculate a random time within the current day
-                random_hour = random.randint(0, 23)
-                random_minute = random.randint(0, 59)
-                random_second = random.randint(0, 59)
+                # random_hour = random.randint(0, 23)
+                # random_minute = random.randint(0, 59)
+                # random_second = random.randint(0, 59)
+                random_hour = 22
+                random_minute = 58
+                random_second = 20
                 scheduled_time = datetime.datetime.now().replace(hour=random_hour, minute=random_minute, second=random_second)
 
                 # If the scheduled time is in the past, add one day to it
@@ -107,15 +110,26 @@ def run_bot(names, context_message, openai_key, discord_key, repetition_interval
                         username = member.name
                         if member.nick is not None:
                             username = member.nick
-                        # Generate a message using OpenAI
-                        generated_message = openai_client.chat.completions.create(
-                            model="gpt-3.5-turbo",
-                            messages=[{"role": "system", "content": "Come up with an interesting and unique (not boring, something really out there) conversation starting question related to your character and propose it to " + username + ". Mention them by name! Also, frame this message as one of your daily questions!"}]
-                        ).choices[0].message.content
-                        # Send the message to the randomly chosen member
-                        await channel.send(generated_message)
-                        # Update the last message time
-                        last_message_time = datetime.datetime.now()
+                        async with channel.typing():
+                            # Reminds the bot about itself every 10 messages
+                            if len(messages) % repetition_interval == 0:
+                                messages.append({"role": "system", "content": "Please remember and adhere to the following: " + context_message})
+                            # Generate a message using OpenAI
+                            messages.append({"role": "system", "content": "Come up with an interesting and unique (not boring, something really out there) conversation starting question related to your character and propose it to " + username + ". Mention them by name! Also, frame this message as one of your daily questions!"})
+                            chgpt_response = openai_client.chat.completions.create(
+                                model="gpt-3.5-turbo",
+                                messages=messages)
+                            response = chgpt_response.choices[0].message.content
+
+                            # Adds response to bot context so it remembers
+                            messages.append({"role": "assistant", "content": response})
+
+                            # Send the message to the channel
+                            await asyncio.sleep(.01 * len(response))
+                            await channel.send(response)
+
+                            # Update the last message time
+                            last_message_time = datetime.datetime.now()
 
             # Wait for 24 hours before checking again
             await asyncio.sleep(24 * 60 * 60)
